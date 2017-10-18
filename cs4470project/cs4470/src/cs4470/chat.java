@@ -17,7 +17,7 @@ public class chat {
 	
 		Scanner scanner = new Scanner(System.in);
 		
-		
+		System.out.println("Welcome to <Golden eagle Chat> program, You can start now!");
 			do{ 
 				
 			String input = scanner.nextLine(); 
@@ -45,10 +45,6 @@ public class chat {
 			}
 			else if(words[0].equals("send")) {
 				System.out.println("send");
-				
-			}
-			else if(words[0].equals("connect")) {
-				System.out.println("fuck");
 				
 			}
 			else if(input.equals("exit")) {
