@@ -30,6 +30,9 @@ public class chat {
             } else if (input.equals("exit")) {
                 choice = 0;
             }
+            else {
+                System.out.println("invalid command");
+            }
 
         } while (choice != 0);
         System.out.print("Thanks for using <Golden eagle Chat>, Good Bye!");
