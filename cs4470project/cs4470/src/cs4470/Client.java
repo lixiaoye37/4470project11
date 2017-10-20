@@ -26,11 +26,12 @@ public class Client{
     }
 
     public String sendMessage(String msg) throws Exception{
-        out.println(msg);
-        String response = in.readLine();
+        out.println(msg); //send message to server
+        String response = in.readLine(); //see response from server (for testing)
         return response;
     }
 
+    //close all connections upon exit command
     public void stopConnection() throws Exception{
         in.close();
         out.close();
