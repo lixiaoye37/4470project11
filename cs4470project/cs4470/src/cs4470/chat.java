@@ -7,8 +7,22 @@ public class chat {
 
     public static void main(String[] args) {
         int port = readPort(args);
+        String ip = myIP();
         int choice = 8;
         Scanner scanner = new Scanner(System.in);
+
+        ServerWrapper s;
+        //server has to start before client
+        try {
+            s = new ServerWrapper(port);
+            s.start();
+        } catch (Exception e) {
+            System.out.println();
+        }
+
+        Client c = new Client(ip, port);
+
+
 
         do {
             System.out.print(">> ");
@@ -21,14 +35,32 @@ public class chat {
                 System.out.println("terminate <connection id>: end connection with specific id");
                 System.out.println("send <connection id> <message>: send message to id");
                 System.out.println("exit: close all connections and exit the program");
-            } else if (input.equals("myip")) {
+            }
+            else if (input.equals("myip")) {
                 System.out.println(myIP());
-            } else if (input.equals("myport")) {
+            }
+            else if (input.equals("myport")) {
                 System.out.println(myPort(port));
-            } else if (input.startsWith("connect")) {
-
-            } else if (input.equals("exit")) {
+            }
+            else if (input.startsWith("connect")) {
+                //do stuff
+            }
+            else if (input.startsWith("send")) {
+                input = input.replace("send ", ""); //replace "send " with ""
+                try {
+                    //this part is working
+                    System.out.println("Response: " + c.sendMessage(input));
+                } catch(Exception e) {
+                    System.out.println(e);
+                }
+            }
+            else if (input.equals("exit")) {
                 choice = 0;
+                try {
+                    c.stopConnection();
+                } catch(Exception e) {
+                    System.out.println("Error closing client connections");
+                }
             }
             else {
                 System.out.println("invalid command");
