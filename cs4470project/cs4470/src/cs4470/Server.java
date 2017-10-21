@@ -40,7 +40,10 @@ public class Server extends Thread {
 				// Accepting new connections
 
 				Socket connection = listener.accept();
+				int port = connection.getPort();
+				Peer peer = new Peer(connection, port);
 
+				chat.setList(peer);
 				Client client = new Client(new Peer(connection));
 
 				client.start();

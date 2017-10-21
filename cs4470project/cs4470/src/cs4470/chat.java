@@ -1,7 +1,11 @@
 package cs4470;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,7 +13,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class chat {
-	static List<Peer> peerList = new ArrayList<>();
+	 static List<Peer> peerList = new ArrayList<>();
+	 public static void setList(Peer peer) {
+		 peerList.add(peer);
+	 }
 	static int myPort=8;
 
 	public static void main(String[] args) {
@@ -39,6 +46,7 @@ public class chat {
 				System.out.println("myport: my port number");
 				System.out.println("connect: connect to another peer");
 				System.out.println("send: send messages to peers");
+				System.out.println("terminate: close the connection with connection ID");
 				System.out.println("exit: exit the program");
 			}
 			else if(input.equals("myip")) {
@@ -48,6 +56,8 @@ public class chat {
 				System.out.println(myPort);
 			}
 			else if(words[0].equals("connect")) {
+				System.out.println(words[1]);
+				System.out.println(words[2]);
 				connect(words[1],Integer.parseInt(words[2]));
 				
 			}
@@ -56,7 +66,16 @@ public class chat {
 				
 			}
 			else if(words[0].equals("send")) {
-				System.out.println("send");
+				String temp="";
+				for(int i = 2;i<words.length;i++) {
+					temp = temp +words[i]+" ";
+				}
+				send(Integer.parseInt(words[1]),temp);
+			}
+			else if(words[0].equals("terminate")) {
+				send(Integer.parseInt(words[1]),"connection closed with:"+myIp);
+				terminate(Integer.parseInt(words[1]));
+				
 				
 			}
 			else if(input.equals("exit")) {
@@ -71,40 +90,21 @@ public class chat {
 	}
 	public static String getIpAddress() 
 	{ 
-	        URL myIP;
-	        try {
-	            myIP = new URL("http://api.externalip.net/ip/");
+		InetAddress ip;
 
-	            BufferedReader in = new BufferedReader(
-	                    new InputStreamReader(myIP.openStream())
-	                    );
-	            return in.readLine();
-	        } catch (Exception e) 
-	        {
-	            try 
-	            {
-	                myIP = new URL("http://myip.dnsomatic.com/");
+		try {
 
-	                BufferedReader in = new BufferedReader(
-	                        new InputStreamReader(myIP.openStream())
-	                        );
-	                return in.readLine();
-	            } catch (Exception e1) 
-	            {
-	                try {
-	                    myIP = new URL("http://icanhazip.com/");
+			ip = Inet4Address.getLocalHost();
 
-	                    BufferedReader in = new BufferedReader(
-	                            new InputStreamReader(myIP.openStream())
-	                            );
-	                    return in.readLine();
-	                } catch (Exception e2) {
-	                    e2.printStackTrace(); 
-	                }
-	            }
-	        }
+			return ip.getHostAddress();
 
-	    return null;
+		} catch (Exception e) {
+
+			System.out.println("Can not get ip address:" + e.toString());
+
+		}
+
+		return "";
 	}
 	public static void connect(String ip, int portNumber) {
 		try {
@@ -136,6 +136,114 @@ public class chat {
 		}
 
 	}
+	public static void terminate(int connectionID) {
+
+		for (int i = 0; i < peerList.size(); i++) {
+
+			if (peerList.get(i).getId() == connectionID) {
+
+				peerList.get(i).terminate();
+
+				peerList.remove(i);
+
+				return;
+
+			}
+
+		}
+
+	}
+	public static void send(int connectionID, String message) {
+
+		for ( Peer peer : peerList) {
+
+			if (peer.getId() == connectionID) {
+
+				peer.sendMessage(message);
+
+				return;
+
+			}
+
+		}
+
+	}
+
+
+
+	// REQUIEMENT # 8: exit
+
+	public static void exit() {
+
+		for ( Peer peer : peerList) {
+
+			peer.terminate();
+
+		}
+
+	
+
+	}
+	
+	
 
 }
 
+//class Server extends Thread {
+//	List<Peer> listeningList;
+//
+//	ServerSocket listener;
+//
+//
+//
+//	Server(int listeningPortNumber){
+//
+//		try {
+//
+//			listener = new ServerSocket(listeningPortNumber);
+//
+//		} catch (IOException e) {
+//
+//			e.printStackTrace();
+//
+//		}
+//
+//		listeningList = new ArrayList<Peer>();
+//
+//	}
+//
+//
+//
+//	public void run(){
+//
+//		try {
+//
+//			while(true){
+//
+//				// Accepting new connections
+//
+//				Socket connection = listener.accept();
+////				int   port = connection.getPort();
+////				
+////				Peer peer = new Peer (connection,port);
+////				peerList.add(peer);
+//
+//				Client client = new Client(new Peer(connection));
+//
+//				client.start();
+//
+//				
+//
+//
+//
+//			}
+//
+//		} catch (IOException e) {
+//
+//			e.printStackTrace();
+//
+//		}
+//
+//	}
+//
+//}

@@ -66,7 +66,8 @@ public class Peer extends Object{
 	public void terminate() {
 
 		try {
-
+			
+			System.out.print("terminate the connection with: "+(socket.getInetAddress().getHostAddress()));
 			socket.close();
 
 		} catch (IOException e) {
