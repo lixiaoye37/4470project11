@@ -1,3 +1,4 @@
-activeuserprofiles=MacBook-Pro-3;Team
+activeuserprofiles=MacBook-Pro-3;MacBook-Pro-4;Team
 eclipse.preferences.version=1
 org.eclipse.rse.systemtype.local.systemType.defaultUserId=TomNguyen
+useridperkey=MacBook-Pro-3.Local\=TomNguyen;MacBook-Pro-4.Local\=TomNguyen;
