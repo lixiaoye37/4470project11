@@ -1,21 +1,33 @@
 package cs4470;
 
-
-import java.util.Scanner;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class chat {
+	static List<Peer> peerList = new ArrayList<>();
+	static int myPort=8;
 
 	public static void main(String[] args) {
-		int myPort = 1818;
+		Scanner scanner = new Scanner(System.in);
+		
+		
 		int choice = 8;
+		String input1;
+		
+		System.out.println("Enter a port Number");
+		input1 = scanner.nextLine(); 
+		myPort = Integer.parseInt(input1);
+		Server serverThread = new Server(myPort);
+		serverThread.start();
 		String myIp="";
 		myIp = getIpAddress();
 	
-		Scanner scanner = new Scanner(System.in);
+		
 		
 		System.out.println("Welcome to <Golden eagle Chat> program, You can start now!");
 			do{ 
@@ -36,11 +48,11 @@ public class chat {
 				System.out.println(myPort);
 			}
 			else if(words[0].equals("connect")) {
-				System.out.println("connect");
+				connect(words[1],Integer.parseInt(words[2]));
 				
 			}
 			else if(words[0].equals("list")) {
-				System.out.println("list");
+				connectionList();
 				
 			}
 			else if(words[0].equals("send")) {
@@ -94,5 +106,36 @@ public class chat {
 
 	    return null;
 	}
+	public static void connect(String ip, int portNumber) {
+		try {
+
+			Socket socket = new Socket(ip, portNumber);
+
+			Peer peer = new Peer(socket, portNumber);
+
+			peer.sendMessage("You have connected to " + socket.getLocalAddress().toString());
+
+			System.out.println("You have connected to " + ip);
+
+			peerList.add(peer);
+
+		} catch (Exception e) {
+
+			System.out.println("Can not connect to " + ip + ". Error: " + e.toString());
+
+		}
+	}
+	public static void connectionList() {
+
+		System.out.println("id: IPaddress   PortNo.");
+
+		for ( Peer peer : peerList) {
+
+			System.out.println(peer.toString());
+
+		}
+
+	}
 
 }
+
