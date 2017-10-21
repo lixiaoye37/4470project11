@@ -43,14 +43,15 @@ public class ServerWrapper extends Thread{
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-                String name = clientSocket.getInetAddress().getHostName();
+                String name = clientSocket.getInetAddress().getHostAddress();
                 if(!users.containsKey(name)) {
                     users.put(name, out); // <ip_string, printwriter>
+                    System.out.println("User connected from IP: " + name);
                 }
                 else {
                     System.out.println("That name already exists in the users list");
                 }
-
+                System.out.print(">> "); //a little hack to clean up the console-like input
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
 //                    System.out.println(inputLine);
