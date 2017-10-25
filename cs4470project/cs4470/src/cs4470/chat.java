@@ -1,3 +1,5 @@
+package cs4470;
+
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
